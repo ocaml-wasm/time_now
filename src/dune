@@ -4,7 +4,8 @@
  (foreign_stubs (language c)
   (names time_now_stubs)
   (flags -std=c11 -fPIC))
- (js_of_ocaml (javascript_files runtime.js) (wasm_files runtime.wat)))
+ (js_of_ocaml (javascript_files runtime.js))
+ (wasm_of_ocaml (javascript_files runtime.js) (wasm_files runtime.wat)))
 
 (rule (targets config.h) (deps)
  (action (copy %{lib:jst-config:config.h} config.h)))
