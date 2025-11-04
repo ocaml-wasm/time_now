@@ -18,6 +18,7 @@
    (type $float (struct (field f64)))
 
    (func (export "time_now_nanoseconds_since_unix_epoch_or_zero")
+      (export "time_now_nanosecond_counter_for_timing")
       (param (ref eq)) (result (ref eq))
       (return_call $caml_copy_int64
          (i64.trunc_sat_f64_s
@@ -30,6 +31,7 @@
                ;; 2 is for shift left and 9 is for s->ns.
                (f64.const 2e9)))))
 
+(;
    (data $performance "performance")
    (data $now "now")
 
@@ -55,4 +57,5 @@
                               (i32.const 0) (i32.const 3))
                            (array.new_fixed $block 1
                               (ref.i31 (i32.const 0)))))))))))
+;)
 )
