@@ -1,4 +1,6 @@
 (module
+   (@string_imports "str")
+   (@string_type $string)
    (import "env" "caml_js_global"
       (func $caml_js_global (param (ref eq)) (result (ref eq))))
    (import "env" "caml_js_get"
@@ -14,7 +16,11 @@
       (func $caml_copy_int64 (param i64) (result (ref eq))))
 
    (type $block (array (mut (ref eq))))
-   (type $string (array (mut i8)))
+(@if $use_js_string
+(@then
+   (type $string (struct (field externref))))
+(@else
+   (type $string (array (mut i8)))))
    (type $float (struct (field f64)))
 
    (func (export "time_now_nanoseconds_since_unix_epoch_or_zero")
@@ -30,8 +36,8 @@
                ;; 2 is for shift left and 9 is for s->ns.
                (f64.const 2e9)))))
 
-   (data $performance "performance")
-   (data $now "now")
+   (@string $performance "performance")
+   (@string $now "now")
 
    ;; consider sharing strategy with time_stamp_counter
    (func (export "time_now_nanosecond_counter_for_timing") (param (ref eq)) (result (ref eq))
@@ -49,10 +55,8 @@
                         (call $caml_js_meth_call
                            (call $caml_js_get
                               (call $caml_js_global (ref.i31 (i32.const 0)))
-                              (array.new_data $string $performance
-                                 (i32.const 0) (i32.const 11)))
-                           (array.new_data $string $now
-                              (i32.const 0) (i32.const 3))
+                              (global.get $performance))
+                           (global.get $now)
                            (array.new_fixed $block 1
                               (ref.i31 (i32.const 0)))))))))))
 )
